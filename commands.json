@@ -1,0 +1,21 @@
+{
+    "global": {
+        "redbackground": {
+            "name": "Change background color to red",
+            "callback": "changeBackgroundColor",
+            "aliases": [
+                "Turn background color red",
+                "Cange background color to red"
+            ]
+        }
+    },
+    "/route/": {
+        "redbackground": {
+            "name": "Change background color to red",
+            "callback": "changeBackgroundColor",
+            "aliases": [
+                "Red background"
+            ]
+        }
+    }
+}
