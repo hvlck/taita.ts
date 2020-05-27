@@ -1,8 +1,8 @@
 class CommandPal {
     constructor(file, options) {
-        this.file = file;
-        this.routes = [];
-        this.rawCommands;
+        this.file = file; // JSON file with commands
+        this.routes = []; // Routes within JSON file
+        this.rawCommands; // All commands from the JSON file
         
         this.matchedCommands = {
             _oldCommands: this.commands,
@@ -19,10 +19,10 @@ class CommandPal {
             }
         };
 
-        this.options = {
-            items: options,
+        this.options = { // Developer-set options
+            items: options, // Options object
 
-            removeItem: function(item) {
+            removeItem: function(item) { // Removes options key/value
                 delete this.items[item];
             }
         }
@@ -39,7 +39,7 @@ class CommandPal {
             }
         }
 
-        fetch(file).then(res => { return res.json() }).then(data => {
+        fetch(file).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
             this.rawCommands = data;
             Object.keys(data).forEach(item => { this.routes.push(item) });
 
@@ -73,11 +73,15 @@ class CommandPal {
         });
     };
 
-    execute(command) {
+    execute(command) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
         
+    };
+
+    remove() {
+        Object.keys(this).forEach(item => delete this[item]);
     };
 
     _generateError(error) {
         console.error(`CommandPal failure: ${err}`);
-    }
+    };
 }

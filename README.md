@@ -4,25 +4,21 @@ Easily create command palettes for your web apps
 
 ## File Structure
 
-### CommandPal
-
+```markdown
+Commandpal
 /src/
+    /commandpal.js
 
-### Demo
-
+Demo
 /route/
-
-/index.html
-
+      /index.html
 /commands.json
-
 /test.js
 
-### Meta
-
+Meta
 /README.md
-
 /LICENSE
+```
 
 ## Roadmap
 
@@ -37,7 +33,8 @@ Easily create command palettes for your web apps
 
 ### Methods
 
-+ Disable/Remove
++ ~~Remove~~
++ Reset
 + Sort commands
 + Execute command by matching the text with the function
 
@@ -45,11 +42,9 @@ Easily create command palettes for your web apps
 
 + Flags
 + Variables in command strings (e.g. "Change background color to *x*")
-+ NLP (very doubtful)
-+ History (optional) to remember used commands and typos
++ History (optional extension) to remember used commands and typos
 + Conflicting commands in different routes
 + Stop rebuilding every time input changes (to stop repeated animations and save memory)
-+ Debugging support
 + **Docs**
 + Sort out all the command variables (and add one that only contains commands in the current scope)
 + Find a more efficient way to loop through everything (looking at you `Object.keys()`)
