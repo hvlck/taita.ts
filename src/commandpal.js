@@ -1,87 +1,101 @@
 class CommandPal {
     constructor(file, options) {
         this.file = file; // JSON file with commands
-        this.routes = []; // Routes within JSON file
-        this.rawCommands; // All commands from the JSON file
-        
+
         this.matchedCommands = {
             _oldCommands: this.commands,
             commands: [],
+            callbacks: [],
 
-            changed: function() {
+            changed: function () {
                 if (this._oldCommands != this.commands) { return true }
                 else { return false }
             },
 
-            reset: function() {
+            reset: function () {
                 this._oldCommands = this.commands;
                 this.commands = [];
+                this.callbacks = [];
             }
         };
 
         this.options = { // Developer-set options
-            items: options, // Options object
+            items: options || {
+                case: false // Default settings as fallback
+            }, // Options object
 
-            removeItem: function(item) { // Removes options key/value
+            removeItem: function (item) { // Removes options key/value
                 delete this.items[item];
-            }
-        }
-
-        this.status = {
-            value: false,
-            
-            getStatus: function() {
-                return this.value;
             },
 
-            _updateStatus: function(value) {
-                this.value = value;
+            addItems: function (item) {
+                this.items = Object.assign(this.items, item);
             }
         }
 
-        fetch(file).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
-            this.rawCommands = data;
-            Object.keys(data).forEach(item => { this.routes.push(item) });
+        this.getCommands();
+    }
 
-            this.commands = {};
-            this.routes.forEach(item => {
-                if (window.location.pathname == item || item == 'global') {
-                    this.commands[item] = {};
-                    this.commands[item].commands = [];
-                    this.commands[item].commands.push(Object.values(this.rawCommands[item])[0])
-                } else { return };
-            });
+    getCommands() {
+        fetch(this.file).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
+            this.commands = data;
         }).catch(err => { this._generateError(err) });
     }
 
-    listen(value) {
+    updateCommands(file) {
+        if (file == this.file) { return false }
+        else {
+            this.file = file;
+            this.getCommands();
+        }
+    }
+
+    listen(value) { // Listens for user input to return matching commands
         this.matchedCommands.reset();
 
-        value = value.toLowerCase();
-        Object.keys(this.commands).forEach(route => {
-            Object.keys(this.commands[route].commands).forEach(command => {
-                this.commands[route].commands[command].aliases.forEach((alias, index) => {
-                    if (this.commands[route].commands[command].aliases[index].toLowerCase().includes(value)) {
-                        this.matchedCommands.commands.push(this.commands[route].commands[command].aliases[index]);
+        if (this.options.items.case === false) { value = value.toLowerCase() }
+        Object.keys(this.commands).forEach(command => {
+            this.commands[command].aliases.forEach((alias, index) => {
+                if (this.options.items.case === false) {
+                    if (this.commands[command].aliases[index].toLowerCase().includes(value)) {
+                        this.matchedCommands.commands.push(this.commands[command].aliases[index]);
                     }
-                });
-
-                if (this.commands[route].commands[command].name.toLowerCase().includes(value)) {
-                    this.matchedCommands.commands.push(this.commands[route].commands[command].name);
+                } else {
+                    if (this.commands[command].aliases[index].includes(value)) {
+                        this.matchedCommands.commands.push(this.commands[command].aliases[index]);
+                    }
                 }
             });
+
+            if (this.commands[command].name.toLowerCase().includes(value)) {
+                this.matchedCommands.commands.push(this.commands[command].name);
+                this.matchedCommands.callbacks.push(this.commands[command].callback)
+            }
         });
     };
 
     execute(command) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
-        
+        let callback;
+        Object.values(this.commands).forEach(item => {
+            if (item.name == command) {
+                callback = item.callback;
+            } else {
+                item.aliases.forEach(alias => {
+                    if (alias == command) {
+                        callback = item.callback;
+                    }
+                })
+            }
+        });
+
+        window[callback]();
     };
 
-    remove() {
+    remove() { // Removes instance's variables
         Object.keys(this).forEach(item => delete this[item]);
     };
 
-    _generateError(error) {
-        console.error(`CommandPal failure: ${err}`);
+    _generateError(error) { // Developer mode erorr reporting
+        console.error(`CommandPal failure: ${error}`);
     };
 }

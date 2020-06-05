@@ -1,14 +1,16 @@
-let e = new CommandPal('/commands.json');
+let commandpal = new CommandPal('/commands.json');
+
+let inp = document.querySelector('input');
 
 window.addEventListener('load', () => {
-    document.querySelector('input').value = ''
+    inp.value = ''
 });
 
 let changed;
 
-document.querySelector('input').addEventListener('input', () => {
-    e.listen(document.querySelector('input').value);
-    changed = e.matchedCommands.changed();
+inp.addEventListener('input', () => {
+    commandpal.listen(inp.value);
+    changed = commandpal.matchedCommands.changed();
     if (changed && document.querySelector('#commands')) {
         document.querySelector('#commands').remove(); 
     };
@@ -16,17 +18,26 @@ document.querySelector('input').addEventListener('input', () => {
     updateCommands();
 });
 
+commandpal.updateCommands('/alt.json');
+
+inp.addEventListener('keypress', event => {
+    if (event.keyCode == 13 && document.querySelector('#commands')) {
+        commandpal.execute(document.querySelector('#commands').firstChild.innerText);
+    } else if (event.keyCode == 40) {
+        
+    }
+});
+
 function updateCommands() {
     let newDiv;
     changed ? newDiv = document.createElement('div') : newDiv = document.querySelector('#commands');
     newDiv.id = 'commands';
     newDiv.classList.add('fadeIn', 'commands')
-    e.matchedCommands.commands.forEach(item => {
+    commandpal.matchedCommands.commands.forEach(item => {
         if (item) {
             item = [item];
             item.forEach(command => {
                 let newCommand = document.createElement('p');
-                newCommand.addEventListener('click', e.execute(newCommand));
                 newCommand.innerText = command;
                 newDiv.appendChild(newCommand);
             });
@@ -36,6 +47,14 @@ function updateCommands() {
     });
 }
 
-function changeBackgroundColor() {
-    document.body.style.background = 'red';
+// Command Palette functions
+
+function light() {
+    document.body.style.background = '#fafafa';
+    document.body.style.color = '#676767';
+};
+
+function dark() {
+    document.body.style.background = '#676767';
+    document.body.style.color = '#fafafa';
 };

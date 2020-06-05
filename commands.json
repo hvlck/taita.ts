@@ -1,21 +1,17 @@
 {
-    "global": {
-        "redbackground": {
-            "name": "Change background color to red",
-            "callback": "changeBackgroundColor",
-            "aliases": [
-                "Turn background color red",
-                "Cange background color to red"
-            ]
-        }
+    "dark": {
+        "name": "Dark mode",
+        "callback": "dark",
+        "aliases": [
+            "Second alias to change to darkmode"
+        ]
     },
-    "/route/": {
-        "redbackground": {
-            "name": "Change background color to red",
-            "callback": "changeBackgroundColor",
-            "aliases": [
-                "Red background"
-            ]
-        }
+    "light": {
+        "name": "Light mode",
+        "callback": "light",
+        "aliases": [
+            "Second alias to change to lightmode",
+            "Third alias to change to lightmode"
+        ]
     }
 }

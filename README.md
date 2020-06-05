@@ -49,3 +49,5 @@ Meta
 + Sort out all the command variables (and add one that only contains commands in the current scope)
 + Find a more efficient way to loop through everything (looking at you `Object.keys()`)
 + Better demo
++ Support for JS objects as commands
++ Updating specific commands, rather than replacing the entire thing
