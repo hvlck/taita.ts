@@ -5,7 +5,6 @@ class CommandPal {
         this.matchedCommands = {
             _oldCommands: this.commands,
             commands: [],
-            callbacks: [],
 
             changed: function () {
                 if (this._oldCommands != this.commands) { return true }
@@ -16,21 +15,32 @@ class CommandPal {
                 this._oldCommands = this.commands;
                 this.commands = [];
                 this.callbacks = [];
+            },
+
+            sort: function (type) {
+                if (type == 'alphabetical') {
+                    this.commands.sort((a, b) => {
+                        if (a.localeCompare(b) > b.localeCompare(a)) { return 1 }
+                        else if (a.localeCompare(b) < b.localeCompare(a)) { return -1 }
+                    });
+                }
             }
         };
 
-        this.commands = {};
+        this.commands = {}; // Raw commands from command source
 
         this.options = { // Developer-set options
-            items: options || {
-                case: false // Default settings as fallback
-            }, // Options object
+            items: Object.assign({
+                case: false, // Default settings as fallback, also assigned to fill in settings gap
+                dev: false,
+                sort: false
+            }, options), // Options object
 
-            removeItem: function (item) { // Removes options key/value
+            remove: function (item) { // Removes options key/value
                 delete this.items[item];
             },
 
-            addItems: function (item) {
+            update: function (item) {
                 this.items = Object.assign(this.items, item);
             }
         }
@@ -59,7 +69,7 @@ class CommandPal {
     getCommands() {
         fetch(this.file).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
             this.commands = Object.assign(this.commands, data);
-        }).catch(err => { this._generateError(err) });
+        }).catch(err => { this._generateError(err, `Failed to load commands from source ${this.file}.`) });
     }
 
     updateCommands(file) {
@@ -89,11 +99,18 @@ class CommandPal {
                 });
             }
 
-            if (this.commands[command].name.toLowerCase().includes(value)) {
-                this.matchedCommands.commands.push(this.commands[command].name);
-                this.matchedCommands.callbacks.push(this.commands[command].callback)
+            if (this.options.items.case === false) {
+                if (this.commands[command].name.toLowerCase().includes(value)) {
+                    this.matchedCommands.commands.push(this.commands[command].name);
+                }
+            } else {
+                if (this.commands[command].name.includes(value)) {
+                    this.matchedCommands.commands.push(this.commands[command].name);
+                }
             }
         });
+
+        if (this.options.items.sort) { this.matchedCommands.sort(this.options.items.sort) };
     };
 
     execute(command) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
@@ -110,7 +127,7 @@ class CommandPal {
                             if (alias == command) {
                                 callback = item.callback;
                             }
-                        });                        
+                        });
                     }
                 }
             });
@@ -118,7 +135,7 @@ class CommandPal {
         }
     };
 
-    _generateError(error) { // Developer mode erorr reporting
-        console.error(`CommandPal failure: ${error}`);
+    _generateError(error, msg) { // Developer mode erorr reporting
+        console.error(`CommandPal failure${this.options.items.dev ? `: ${msg}` : '.'}  Error: ${error}.`);
     };
 }

@@ -3,7 +3,7 @@
         "name": "Dark mode",
         "callback": "dark",
         "aliases": [
-            "Second alias to change to darkmode"
+            "2nd alias to change to darkmode"
         ]
     },
     "light": {
@@ -11,11 +11,15 @@
         "callback": "light",
         "aliases": [
             "Second alias to change to lightmode",
-            "Third alias to change to lightmode"
+            "3rd alias to change to lightmode"
         ]
     },
     "add": {
         "name": "Add extra commands",
         "callback": "add"
+    },
+    "case": {
+        "name": "Turn on case sensitivity",
+        "callback": "addCase"
     }
 }

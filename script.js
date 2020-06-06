@@ -1,4 +1,4 @@
-let commandpal = new CommandPal('/commands.json');
+let commandpal = new CommandPal('/commands.json', { sort: 'alphabetical' });
 
 let inp = document.querySelector('input');
 let commands;
@@ -21,7 +21,7 @@ inp.addEventListener('input', () => {
 
 inp.addEventListener('keypress', event => {
     if (event.keyCode == 13 && commands) {
-        commandpal.execute(commands.firstChild.innerText);
+        if (commands.firstChild) { commandpal.execute(commands.firstChild.innerText) };
         Object.values(commands.children).forEach(child => child.remove());
         inp.value = '';
         commandpal.listen('');
@@ -33,6 +33,7 @@ function updateCommands() {
     changed ? commands = document.createElement('div') : commands = document.querySelector('#commands');
     commands.id = 'commands';
     commands.classList.add('fadeIn', 'commands')
+
     commandpal.matchedCommands.commands.forEach(item => {
         if (item) {
             item = [item];
@@ -83,4 +84,24 @@ function add() {
 
 function remove() {
     commandpal.removeCommand('remove');
+}
+
+function addCase() {
+    commandpal.options.update({
+        case: true
+    });
+
+    commandpal.insertCommand({
+        'removeCase': {
+            'name': 'Remove case sensitivty',
+            'callback': 'removeCase'
+        }
+    })
+};
+
+function removeCase() {
+    commandpal.options.update({
+        case: false
+    });
+    commandpal.removeCommand('removeCase');
 }
