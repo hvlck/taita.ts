@@ -1,6 +1,7 @@
 let commandpal = new CommandPal('/commands.json');
 
 let inp = document.querySelector('input');
+let commands;
 
 window.addEventListener('load', () => {
     inp.value = ''
@@ -11,40 +12,50 @@ let changed;
 inp.addEventListener('input', () => {
     commandpal.listen(inp.value);
     changed = commandpal.matchedCommands.changed();
-    if (changed && document.querySelector('#commands')) {
-        document.querySelector('#commands').remove(); 
+    if (changed && commands) {
+        Object.values(commands.children).forEach(child => child.remove());
     };
 
     updateCommands();
 });
 
-commandpal.updateCommands('/alt.json');
-
 inp.addEventListener('keypress', event => {
-    if (event.keyCode == 13 && document.querySelector('#commands')) {
-        commandpal.execute(document.querySelector('#commands').firstChild.innerText);
-    } else if (event.keyCode == 40) {
-        
+    if (event.keyCode == 13 && commands) {
+        commandpal.execute(commands.firstChild.innerText);
+        Object.values(commands.children).forEach(child => child.remove());
+        inp.value = '';
+        commandpal.listen('');
+        updateCommands();
     }
 });
 
 function updateCommands() {
-    let newDiv;
-    changed ? newDiv = document.createElement('div') : newDiv = document.querySelector('#commands');
-    newDiv.id = 'commands';
-    newDiv.classList.add('fadeIn', 'commands')
+    changed ? commands = document.createElement('div') : commands = document.querySelector('#commands');
+    commands.id = 'commands';
+    commands.classList.add('fadeIn', 'commands')
     commandpal.matchedCommands.commands.forEach(item => {
         if (item) {
             item = [item];
             item.forEach(command => {
-                let newCommand = document.createElement('p');
-                newCommand.innerText = command;
-                newDiv.appendChild(newCommand);
+                let newCommand = buildElement('p', command)
+                commands.appendChild(newCommand);
             });
 
-            document.body.appendChild(newDiv);
+            document.body.appendChild(commands);
         }
     });
+}
+
+const buildElement = (type, text, attributes) => {
+    let element = document.createElement(type);
+    element.innerText = text;
+    if (attributes) {
+        Object.keys(attributes).forEach(item => {
+            if (item.includes('data_')) { element.dataset[item.slice(4)] = attributes[item] }
+            else { element[item] = attributes[item] }
+        });
+    }
+    return element;
 }
 
 // Command Palette functions
@@ -58,3 +69,18 @@ function dark() {
     document.body.style.background = '#676767';
     document.body.style.color = '#fafafa';
 };
+
+function add() {
+    commandpal.insertCommand(
+        {
+            'remove': {
+                'name': 'Remove this command',
+                'callback': 'remove'
+            }
+        }
+    );
+}
+
+function remove() {
+    commandpal.removeCommand('remove');
+}

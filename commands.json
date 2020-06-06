@@ -13,5 +13,9 @@
             "Second alias to change to lightmode",
             "Third alias to change to lightmode"
         ]
+    },
+    "add": {
+        "name": "Add extra commands",
+        "callback": "add"
     }
 }

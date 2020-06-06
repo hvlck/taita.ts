@@ -10,8 +10,7 @@ Commandpal
     /commandpal.js
 
 Demo
-/route/
-      /index.html
+/index.html
 /commands.json
 /test.js
 
@@ -33,21 +32,18 @@ Meta
 
 ### Methods
 
-+ ~~Remove~~
 + Reset
 + Sort commands
-+ Execute command by matching the text with the function
++ ~~Execute command by matching the text with the function~~
 
 ### Other
 
 + Flags
 + Variables in command strings (e.g. "Change background color to *x*")
 + History (optional extension) to remember used commands and typos
-+ Conflicting commands in different routes
 + Stop rebuilding every time input changes (to stop repeated animations and save memory)
 + **Docs**
 + Sort out all the command variables (and add one that only contains commands in the current scope)
-+ Find a more efficient way to loop through everything (looking at you `Object.keys()`)
 + Better demo
 + Support for JS objects as commands
 + Updating specific commands, rather than replacing the entire thing
