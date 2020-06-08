@@ -1,6 +1,6 @@
 # commandpal
 
-Easily create command palettes for your web apps
+Command palette library
 
 ## File Structure
 

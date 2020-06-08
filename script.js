@@ -3,36 +3,68 @@ let commandpal = new CommandPal('/commands.json', { sort: 'alphabetical' });
 let inp = document.querySelector('input');
 let commands;
 
+let commandIndex = 0;
+
 window.addEventListener('load', () => {
-    inp.value = ''
+    inp.value = '';
 });
 
-let changed;
+let changed = commandpal.matchedCommands.changed();
+
+inp.addEventListener('focus', () => {
+    commandpal.listen(inp.value);
+    updateCommands();
+})
 
 inp.addEventListener('input', () => {
     commandpal.listen(inp.value);
-    changed = commandpal.matchedCommands.changed();
-    if (changed && commands) {
-        Object.values(commands.children).forEach(child => child.remove());
-    };
 
     updateCommands();
 });
 
-inp.addEventListener('keypress', event => {
+inp.addEventListener('keydown', event => {
     if (event.keyCode == 13 && commands) {
-        if (commands.firstChild) { commandpal.execute(commands.firstChild.innerText) };
-        Object.values(commands.children).forEach(child => child.remove());
+        Object.values(commands.children).forEach(child => {
+            if (child.classList.contains('focused')) {
+                commandpal.execute(child.innerText)
+            }
+        });
         inp.value = '';
         commandpal.listen('');
         updateCommands();
+    } else if (event.keyCode == 38) { // Up arrow key
+        Object.values(commands.children).forEach(child => child.classList.remove('focused'));
+        if (commandIndex <= 0) {
+            commands.children[commands.children.length - 1].classList.add('focused')
+            commandIndex = commands.children.length - 1;
+        } else {
+            commandIndex -= 1;
+            commands.children[commandIndex].classList.add('focused');
+        }
+    } else if (event.keyCode == 40) { // Down arrow key
+        Object.values(commands.children).forEach(child => child.classList.remove('focused'));
+        if (commandIndex >= commands.children.length - 1) {
+            commands.children[0].classList.add('focused')
+            commandIndex = 0;
+        } else {
+            commandIndex += 1;
+            commands.children[commandIndex].classList.add('focused');
+        }
     }
 });
 
 function updateCommands() {
-    changed ? commands = document.createElement('div') : commands = document.querySelector('#commands');
-    commands.id = 'commands';
-    commands.classList.add('fadeIn', 'commands')
+    commandIndex = 0;
+    if (changed && document.querySelector('#commands')) {
+        commands = document.querySelector('#commands');
+        Object.values(commands.children).forEach(child => child.remove());
+    }
+    else {
+        commands = buildElement('div', '', {
+            id: 'commands',
+            className: 'fadeIn commands'
+        })
+    }
 
     commandpal.matchedCommands.commands.forEach(item => {
         if (item) {
@@ -40,11 +72,26 @@ function updateCommands() {
             item.forEach(command => {
                 let newCommand = buildElement('p', command)
                 commands.appendChild(newCommand);
+
+                newCommand.addEventListener('mouseover', () => {
+                    Object.values(commands.children).forEach(child => child.classList.remove('focused'));
+                    newCommand.classList.add('focused');
+                });
+
+                newCommand.addEventListener('click', () => {
+                    commandpal.execute(newCommand.innerText);    
+                    commandpal.listen(inp.value);
+                    updateCommands();                
+                });
             });
 
             document.body.appendChild(commands);
         }
     });
+
+    if (commands.children) {
+        commands.children[commandIndex].classList.add('focused');
+    }
 }
 
 const buildElement = (type, text, attributes) => {
@@ -62,13 +109,11 @@ const buildElement = (type, text, attributes) => {
 // Command Palette functions
 
 function light() {
-    document.body.style.background = '#fafafa';
-    document.body.style.color = '#676767';
+    document.querySelector('link').href = 'https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/light-variable.css';
 };
 
 function dark() {
-    document.body.style.background = '#676767';
-    document.body.style.color = '#fafafa';
+    document.querySelector('link').href = 'https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/dark-variable.css';
 };
 
 function add() {

@@ -1,6 +1,6 @@
 class CommandPal {
     constructor(file, options) {
-        this.file = file; // JSON file with commands
+        this.source = file; // JSON file with commands
 
         this.matchedCommands = {
             _oldCommands: this.commands,
@@ -14,7 +14,6 @@ class CommandPal {
             reset: function () {
                 this._oldCommands = this.commands;
                 this.commands = [];
-                this.callbacks = [];
             },
 
             sort: function (type) {
@@ -67,15 +66,19 @@ class CommandPal {
     }
 
     getCommands() {
-        fetch(this.file).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
-            this.commands = Object.assign(this.commands, data);
-        }).catch(err => { this._generateError(err, `Failed to load commands from source ${this.file}.`) });
+        if (typeof this.source == 'string' && this.source.endsWith('.json')) {
+            fetch(this.source).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
+                this.commands = Object.assign(this.commands, data);
+            }).catch(err => { this._generateError(err, `Failed to load commands from source ${this.source}.`) });
+        } else {
+            this.commands = Object.assign(this.commands, this.source)
+        }
     }
 
     updateCommands(file) {
-        if (file == this.file) { return false }
+        if (file == this.source) { return false }
         else {
-            this.file = file;
+            this.source = file;
             this.getCommands();
         }
     }
@@ -113,7 +116,7 @@ class CommandPal {
         if (this.options.items.sort) { this.matchedCommands.sort(this.options.items.sort) };
     };
 
-    execute(command) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
+    execute(command, obj) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
         let callback;
         if (typeof command == 'function') {
             command();
@@ -131,7 +134,8 @@ class CommandPal {
                     }
                 }
             });
-            window[callback]();
+            if (!obj) { obj = window }
+            obj[callback](command);
         }
     };
 
