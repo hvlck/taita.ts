@@ -3,15 +3,15 @@
         "name": "Dark mode",
         "callback": "dark",
         "aliases": [
-            "2nd alias to change to darkmode"
+            "2nd alias to change to dark mode"
         ]
     },
     "light": {
         "name": "Light mode",
         "callback": "light",
         "aliases": [
-            "Second alias to change to lightmode",
-            "3rd alias to change to lightmode"
+            "Second alias to change to light mode",
+            "3rd alias to change to light mode"
         ]
     },
     "add": {
@@ -21,5 +21,9 @@
     "case": {
         "name": "Turn on case sensitivity",
         "callback": "addCase"
+    },
+    "toggleSort": {
+        "name": "Toggle sorting",
+        "callback": "toggleSorting"
     }
 }

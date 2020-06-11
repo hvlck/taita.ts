@@ -12,13 +12,12 @@ window.addEventListener('load', () => {
 let changed = commandpal.matchedCommands.changed();
 
 inp.addEventListener('focus', () => {
-    commandpal.listen(inp.value);
     updateCommands();
-})
+});
+
+inp.addEventListener('blur', () => Object.values(commands.children).forEach(item => item.remove()))
 
 inp.addEventListener('input', () => {
-    commandpal.listen(inp.value);
-
     updateCommands();
 });
 
@@ -30,9 +29,9 @@ inp.addEventListener('keydown', event => {
             }
         });
         inp.value = '';
-        commandpal.listen('');
         updateCommands();
     } else if (event.keyCode == 38) { // Up arrow key
+        if (!commands.children) { return }
         Object.values(commands.children).forEach(child => child.classList.remove('focused'));
         if (commandIndex <= 0) {
             commands.children[commands.children.length - 1].classList.add('focused')
@@ -42,6 +41,7 @@ inp.addEventListener('keydown', event => {
             commands.children[commandIndex].classList.add('focused');
         }
     } else if (event.keyCode == 40) { // Down arrow key
+        if (!commands.children) { return }
         Object.values(commands.children).forEach(child => child.classList.remove('focused'));
         if (commandIndex >= commands.children.length - 1) {
             commands.children[0].classList.add('focused')
@@ -54,6 +54,7 @@ inp.addEventListener('keydown', event => {
 });
 
 function updateCommands() {
+    commandpal.listen(inp.value);
     commandIndex = 0;
     if (changed && document.querySelector('#commands')) {
         commands = document.querySelector('#commands');
@@ -79,9 +80,9 @@ function updateCommands() {
                 });
 
                 newCommand.addEventListener('click', () => {
-                    commandpal.execute(newCommand.innerText);    
+                    commandpal.execute(newCommand.innerText);
                     commandpal.listen(inp.value);
-                    updateCommands();                
+                    updateCommands();
                 });
             });
 
@@ -89,7 +90,7 @@ function updateCommands() {
         }
     });
 
-    if (commands.children) {
+    if (commands.children.length != 0) {
         commands.children[commandIndex].classList.add('focused');
     }
 }
@@ -149,4 +150,18 @@ function removeCase() {
         case: false
     });
     commandpal.removeCommand('removeCase');
+}
+
+function toggleSorting() {
+    if (commandpal.options.items.sort == 'reverse-alphabetical') {
+        commandpal.options.update({
+            sort: 'alphabetical'
+        })
+    } else if (commandpal.options.items.sort == 'alphabetical') {
+        commandpal.options.update({
+            sort: 'reverse-alphabetical'
+        })
+    }
+
+    updateCommands();
 }

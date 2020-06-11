@@ -25,20 +25,24 @@ Meta
 
 + ~~Case sensitivity~~
 + RegEx matching
-+ Exact and Partial matching
++ Exact and ~~Partial~~ matching
 + ~~Sort commands~~
 + Dev mode [in-prog]
 
 ### Methods
 
 + Reset
-+ Sort commands [in-prog {~~alphabetical~~}]
++ Sort commands [in-prog {~~alphabetical~~, ~~reverse-alphabetical~~}]
 + ~~Execute command~~
 
 ### Other
 
++ Hidden alias matching (if command string matches alias, show the normal command)
 + History (optional extension) to remember used commands and typos
++ Reverse-history sorting
++ ~~Reverse-alphabetical sorting~~
++ Command options
+  + Weight (higher weight = higher ranking; weight * history)
 + **Docs**
-+ Better demo
-+ Support for JS objects as commands
-+ Updating specific commands, rather than replacing the entire thing
++ ~~Support for JS objects as commands~~
++ Demo: fix error navigating with arrow keys when there are no matching commands

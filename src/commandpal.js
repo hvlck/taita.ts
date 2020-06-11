@@ -22,6 +22,11 @@ class CommandPal {
                         if (a.localeCompare(b) > b.localeCompare(a)) { return 1 }
                         else if (a.localeCompare(b) < b.localeCompare(a)) { return -1 }
                     });
+                } else if (type == 'reverse-alphabetical') {
+                    this.commands.sort((a, b) => {
+                        if (a.localeCompare(b) > b.localeCompare(a)) { return -1 }
+                        else if (a.localeCompare(b) < b.localeCompare(a)) { return 1 }
+                    });
                 }
             }
         };
