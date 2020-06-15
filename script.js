@@ -1,21 +1,37 @@
-let commandpal = new CommandPal('/commands.json', { sort: 'alphabetical' });
+const buildElement = (type, text, attributes) => {
+    let element = document.createElement(type);
+    element.innerText = text;
+    if (attributes) {
+        Object.keys(attributes).forEach(item => {
+            if (item.includes('data_')) { element.dataset[item.slice(4)] = attributes[item] }
+            else { element[item] = attributes[item] }
+        });
+    }
+    return element;
+}
 
-let inp = document.querySelector('input');
+let commandpal = new CommandPal('/commands.json', {
+    sort: 'alphabetical',
+    ranking: true
+});
+
+let inp = buildElement('input', '', {
+    type: 'text',
+    placeholder: 'Enter command...',
+    value: ''
+});
+
+document.body.appendChild(inp);
+
 let commands;
 
 let commandIndex = 0;
-
-window.addEventListener('load', () => {
-    inp.value = '';
-});
 
 let changed = commandpal.matchedCommands.changed();
 
 inp.addEventListener('focus', () => {
     updateCommands();
 });
-
-inp.addEventListener('blur', () => Object.values(commands.children).forEach(item => item.remove()))
 
 inp.addEventListener('input', () => {
     updateCommands();
@@ -64,47 +80,29 @@ function updateCommands() {
         commands = buildElement('div', '', {
             id: 'commands',
             className: 'fadeIn commands'
-        })
-    }
+        });
+    };
 
     commandpal.matchedCommands.commands.forEach(item => {
-        if (item) {
-            item = [item];
-            item.forEach(command => {
-                let newCommand = buildElement('p', command)
-                commands.appendChild(newCommand);
+        let newCommand = buildElement('p', item);
 
-                newCommand.addEventListener('mouseover', () => {
-                    Object.values(commands.children).forEach(child => child.classList.remove('focused'));
-                    newCommand.classList.add('focused');
-                });
+        newCommand.addEventListener('click', () => {
+            commandpal.execute(newCommand.innerText);
+        });
 
-                newCommand.addEventListener('click', () => {
-                    commandpal.execute(newCommand.innerText);
-                    commandpal.listen(inp.value);
-                    updateCommands();
-                });
-            });
+        newCommand.addEventListener('mouseover', () => {
+            Object.values(commands.children).forEach(child => child.classList.remove('focused'));
+            newCommand.classList.add('focused');
+        });
 
-            document.body.appendChild(commands);
-        }
+        commands.appendChild(newCommand);
     });
+
+    document.body.appendChild(commands);
 
     if (commands.children.length != 0) {
         commands.children[commandIndex].classList.add('focused');
     }
-}
-
-const buildElement = (type, text, attributes) => {
-    let element = document.createElement(type);
-    element.innerText = text;
-    if (attributes) {
-        Object.keys(attributes).forEach(item => {
-            if (item.includes('data_')) { element.dataset[item.slice(4)] = attributes[item] }
-            else { element[item] = attributes[item] }
-        });
-    }
-    return element;
 }
 
 // Command Palette functions
@@ -118,7 +116,7 @@ function dark() {
 };
 
 function add() {
-    commandpal.insertCommand(
+    commandpal.updateCommand(
         {
             'remove': {
                 'name': 'Remove this command',
@@ -137,7 +135,7 @@ function addCase() {
         case: true
     });
 
-    commandpal.insertCommand({
+    commandpal.updateCommand({
         'removeCase': {
             'name': 'Remove case sensitivty',
             'callback': 'removeCase'
@@ -152,7 +150,7 @@ function removeCase() {
     commandpal.removeCommand('removeCase');
 }
 
-function toggleSorting() {
+function toggleSort() {
     if (commandpal.options.items.sort == 'reverse-alphabetical') {
         commandpal.options.update({
             sort: 'alphabetical'
@@ -163,5 +161,10 @@ function toggleSorting() {
         })
     }
 
+    updateCommands();
+}
+
+function refreshCommands() {
+    commandpal.updateCommandList('./commands.json');
     updateCommands();
 }

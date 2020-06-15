@@ -24,6 +24,10 @@
     },
     "toggleSort": {
         "name": "Toggle sorting",
-        "callback": "toggleSorting"
+        "callback": "toggleSort"
+    },
+    "updateCommands": {
+        "name": "Refresh commands",
+        "callback": "refreshCommands"
     }
 }

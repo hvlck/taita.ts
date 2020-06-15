@@ -31,6 +31,21 @@ class CommandPal {
             }
         };
 
+        this.rankings = {
+            getRanking: command => {
+                return this.commands[command].rank || 0;
+            },
+
+            resetRanking: command => {
+                this.commands[command] = Object.assign(this.commands[command], { rank: 0 });
+                return this.commands[command];
+            },
+
+            reset: () => {
+                Object.keys(this.commands).forEach(item => this.commands[item].rank = 0);
+            }
+        }
+
         this.commands = {}; // Raw commands from command source
 
         this.options = { // Developer-set options
@@ -49,10 +64,10 @@ class CommandPal {
             }
         }
 
-        this.getCommands();
+        this._fetchCommands();
     }
 
-    insertCommand(...args) {
+    updateCommand(...args) {
         args.forEach(arg => this.commands[Object.keys(arg)[0]] = Object.values(arg)[0]);
     }
 
@@ -70,7 +85,7 @@ class CommandPal {
         })
     }
 
-    getCommands() {
+    _fetchCommands() {
         if (typeof this.source == 'string' && this.source.endsWith('.json')) {
             fetch(this.source).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
                 this.commands = Object.assign(this.commands, data);
@@ -80,11 +95,11 @@ class CommandPal {
         }
     }
 
-    updateCommands(file) {
+    updateCommandList(file) {
         if (file == this.source) { return false }
         else {
             this.source = file;
-            this.getCommands();
+            this._fetchCommands();
         }
     }
 
@@ -123,25 +138,27 @@ class CommandPal {
 
     execute(command, obj) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
         let callback;
-        if (typeof command == 'function') {
-            command();
-        } else {
-            Object.values(this.commands).forEach(item => {
-                if (item.name == command) {
-                    callback = item.callback;
-                } else {
-                    if (item.aliases) {
-                        item.aliases.forEach(alias => {
-                            if (alias == command) {
-                                callback = item.callback;
-                            }
-                        });
-                    }
+        Object.values(this.commands).forEach(item => {
+            if (item.name == command) {
+                if (this.options.items.ranking) {
+                    if (!item.rank) { item.rank = 1 }
+                    else if (item.rank >= 1) { item.rank += 1 };
                 }
-            });
-            if (!obj) { obj = window }
-            obj[callback](command);
-        }
+                callback = item.callback;
+            } else if (item.aliases) {
+                item.aliases.forEach(alias => {
+                    if (alias == command) {
+                        callback = item.callback;
+                        if (this.options.items.ranking) {
+                            if (!item.rank) { item.rank = 1 }
+                            else if (item.rank >= 1) { item.rank += 1 };
+                        }
+                    }
+                });
+            }
+        });
+        if (!obj) { obj = window }
+        obj[callback](command);
     };
 
     _generateError(error, msg) { // Developer mode erorr reporting

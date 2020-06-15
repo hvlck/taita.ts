@@ -28,6 +28,7 @@ Meta
 + Exact and ~~Partial~~ matching
 + ~~Sort commands~~
 + Dev mode [in-prog]
+  + Helpful errors
 
 ### Methods
 
@@ -38,11 +39,9 @@ Meta
 ### Other
 
 + Hidden alias matching (if command string matches alias, show the normal command)
-+ History (optional extension) to remember used commands and typos
 + Reverse-history sorting
 + ~~Reverse-alphabetical sorting~~
 + Command options
   + Weight (higher weight = higher ranking; weight * history)
-+ **Docs**
++ **Docs** (and code commenting)
 + ~~Support for JS objects as commands~~
-+ Demo: fix error navigating with arrow keys when there are no matching commands
