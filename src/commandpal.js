@@ -27,7 +27,7 @@ class CommandPal {
                         if (a.localeCompare(b) > b.localeCompare(a)) { return -1 }
                         else if (a.localeCompare(b) < b.localeCompare(a)) { return 1 }
                     });
-                } else if (type == 'rank') {
+                } else if (type.includes('rank')) {
                     this.matchedCommands.ranks = [];
                     this.matchedCommands.commands.forEach((item, index) => {
                         this.matchedCommands.ranks[index] = {};
@@ -45,7 +45,11 @@ class CommandPal {
                         });
                     }); // Populates matched commands with ranks
 
-                    this.matchedCommands.ranks.sort((a, b) => parseFloat(b.rank) - parseFloat(a.rank)); // Sorts objects by rank
+                    if (type == 'rank') {
+                        this.matchedCommands.ranks.sort((a, b) => parseFloat(b.rank) - parseFloat(a.rank)); // Sorts objects by rank
+                    } else if (type == 'reverse-rank') {
+                        this.matchedCommands.ranks.sort((a, b) => parseFloat(a.rank) - parseFloat(b.rank)); // Sorts objects by rank
+                    }
 
                     this.matchedCommands.commands = this.matchedCommands.ranks.map(item => item.name);
                 }

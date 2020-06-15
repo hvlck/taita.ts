@@ -161,6 +161,10 @@ function toggleSort() {
         });
     } else if (commandpal.options.items.sort == 'rank') {
         commandpal.options.update({
+            sort: 'reverse-rank'
+        });
+    } else if (commandpal.options.items.sort == 'reverse-rank') {
+        commandpal.options.update({
             sort: 'alphabetical'
         });
     };

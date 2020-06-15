@@ -32,14 +32,13 @@ Meta
 
 ### Methods
 
-+ Reset
-+ Sort commands [in-prog {~~alphabetical~~, ~~reverse-alphabetical~~}]
++ ~~Sort commands~~
 + ~~Execute command~~
 
 ### Other
 
 + Hidden alias matching (if command string matches alias, show the normal command)
-+ Reverse-history sorting
++ ~~Reverse-history sorting~~
 + ~~Reverse-alphabetical sorting~~
 + Command options
   + Weight (higher weight = higher ranking; weight * history)
