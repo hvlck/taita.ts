@@ -25,7 +25,7 @@ Meta
 
 + ~~Case sensitivity~~
 + RegEx matching
-+ Exact and ~~Partial~~ matching
++ ~~Exact and Partial matching~~
 + ~~Sort commands~~
 + Dev mode [in-prog]
   + Helpful errors

@@ -136,24 +136,47 @@ class CommandPal {
             if (this.commands[command].aliases) {
                 this.commands[command].aliases.forEach((alias, index) => {
                     if (this.options.items.case === false) {
-                        if (this.commands[command].aliases[index].toLowerCase().includes(value)) {
-                            this.matchedCommands.commands.push(this.commands[command].aliases[index]);
+                        if (this.options.items.exact === true) {
+                            if (this.commands[command].aliases[index].toLowerCase().startsWith(value)) {
+                                this.matchedCommands.commands.push(this.commands[command].aliases[index]);
+                            }                            
+                        } else {
+                            if (this.commands[command].aliases[index].toLowerCase().includes(value)) {
+                                this.matchedCommands.commands.push(this.commands[command].aliases[index]);
+                            }
                         }
                     } else {
-                        if (this.commands[command].aliases[index].includes(value)) {
-                            this.matchedCommands.commands.push(this.commands[command].aliases[index]);
+                        if (this.options.items.exact === true) {
+                            if (this.commands[command].aliases[index].startsWith(value)) {
+                                this.matchedCommands.commands.push(this.commands[command].aliases[index]);
+                            }                            
+                        } else {
+                            if (this.commands[command].aliases[index].includes(value)) {
+                                this.matchedCommands.commands.push(this.commands[command].aliases[index]);
+                            }
                         }
                     }
                 });
             }
 
             if (this.options.items.case === false) {
+                if (this.options.items.exact === true) {
+                    if (this.commands[command].name.toLowerCase().startsWith(value)) {
+                        this.matchedCommands.commands.push(this.commands[command].name);
+                    }
+                }
                 if (this.commands[command].name.toLowerCase().includes(value)) {
                     this.matchedCommands.commands.push(this.commands[command].name);
                 }
             } else {
-                if (this.commands[command].name.includes(value)) {
-                    this.matchedCommands.commands.push(this.commands[command].name);
+                if (this.options.items.exact === true) {
+                    if (this.commands[command].name.startsWith(value)) {
+                        this.matchedCommands.commands.push(this.commands[command].name);
+                    }
+                } else {
+                    if (this.commands[command].name.includes(value)) {
+                        this.matchedCommands.commands.push(this.commands[command].name);
+                    }
                 }
             }
         });
