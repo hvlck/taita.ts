@@ -151,15 +151,19 @@ function removeCase() {
 }
 
 function toggleSort() {
-    if (commandpal.options.items.sort == 'reverse-alphabetical') {
-        commandpal.options.update({
-            sort: 'alphabetical'
-        })
-    } else if (commandpal.options.items.sort == 'alphabetical') {
+     if (commandpal.options.items.sort == 'alphabetical') {
         commandpal.options.update({
             sort: 'reverse-alphabetical'
-        })
-    }
+        });
+    } else if (commandpal.options.items.sort == 'reverse-alphabetical') {
+        commandpal.options.update({
+            sort: 'rank'
+        });
+    } else if (commandpal.options.items.sort == 'rank') {
+        commandpal.options.update({
+            sort: 'alphabetical'
+        });
+    };
 
     updateCommands();
 }

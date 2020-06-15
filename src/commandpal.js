@@ -16,17 +16,38 @@ class CommandPal {
                 this.commands = [];
             },
 
-            sort: function (type) {
+            sort: type => {
                 if (type == 'alphabetical') {
-                    this.commands.sort((a, b) => {
+                    this.matchedCommands.commands.sort((a, b) => {
                         if (a.localeCompare(b) > b.localeCompare(a)) { return 1 }
                         else if (a.localeCompare(b) < b.localeCompare(a)) { return -1 }
                     });
                 } else if (type == 'reverse-alphabetical') {
-                    this.commands.sort((a, b) => {
+                    this.matchedCommands.commands.sort((a, b) => {
                         if (a.localeCompare(b) > b.localeCompare(a)) { return -1 }
                         else if (a.localeCompare(b) < b.localeCompare(a)) { return 1 }
                     });
+                } else if (type == 'rank') {
+                    this.matchedCommands.ranks = [];
+                    this.matchedCommands.commands.forEach((item, index) => {
+                        this.matchedCommands.ranks[index] = {};
+                        this.matchedCommands.ranks[index].name = item;
+                    }); // Populates ranks with names of currently matched commands
+
+                    Object.values(this.commands).forEach(item => {
+                        Object.values(this.matchedCommands.ranks).forEach((arrItem, index) => {
+                            if (item.name == arrItem.name) { this.matchedCommands.ranks[index].rank = item.rank || 0 }
+                            if (item.aliases) {
+                                item.aliases.forEach(alias => {
+                                    if (alias == arrItem.name) { this.matchedCommands.ranks[index].rank = item.rank || 0 }
+                                });
+                            };
+                        });
+                    }); // Populates matched commands with ranks
+
+                    this.matchedCommands.ranks.sort((a, b) => parseFloat(b.rank) - parseFloat(a.rank)); // Sorts objects by rank
+
+                    this.matchedCommands.commands = this.matchedCommands.ranks.map(item => item.name);
                 }
             }
         };
