@@ -7,12 +7,12 @@ Command palette library
 ```markdown
 Commandpal
 /src/
-    /commandpal.js
+    /commandpal.js - core file
 
 Demo
-/index.html
-/commands.json
-/test.js
+/index.html - demo page
+/commands.json - list of all commands, their names, aliases, and callbacks
+/script.js - command palette ui, location of callback functions
 
 Meta
 /README.md
@@ -24,11 +24,10 @@ Meta
 ### Options
 
 + ~~Case sensitivity~~
-+ RegEx matching
 + ~~Exact and Partial matching~~
 + ~~Sort commands~~
-+ Dev mode [in-prog]
-  + Helpful errors
++ ~~Dev mode~~ [always a work-in-progress]
+  + ~~Helpful errors~~
 
 ### Methods
 
@@ -41,6 +40,6 @@ Meta
 + ~~Reverse-history sorting~~
 + ~~Reverse-alphabetical sorting~~
 + Command options
-  + Weight (higher weight = higher ranking; weight * history)
-+ **Docs** (and code commenting)
++ **Docs**
+  + ~~Code commenting~~ [always a work-in-progress]
 + ~~Support for JS objects as commands~~

@@ -27,7 +27,7 @@ class CommandPal {
                         if (a.localeCompare(b) > b.localeCompare(a)) { return -1 }
                         else if (a.localeCompare(b) < b.localeCompare(a)) { return 1 }
                     });
-                } else if (type.includes('rank')) {
+                } else if (type == 'rank' || type == 'reverse-rank') {
                     this.matchedCommands.ranks = [];
                     this.matchedCommands.commands.forEach((item, index) => {
                         this.matchedCommands.ranks[index] = {};
@@ -52,18 +52,22 @@ class CommandPal {
                     }
 
                     this.matchedCommands.commands = this.matchedCommands.ranks.map(item => item.name);
-                }
+                } else { this._generateError('', 'Invalid sorting pattern.') };
             }
         };
 
         this.rankings = {
             getRanking: command => {
-                return this.commands[command].rank || 0;
+                if (!command) { this._generateError('', 'No command specified when calling rankings.getRanking().') }
+                else { return this.commands[command].rank || 0 }
             },
 
             resetRanking: command => {
-                this.commands[command] = Object.assign(this.commands[command], { rank: 0 });
-                return this.commands[command];
+                if (!command) { this._generateError('', 'No command specified when calling rankings.resetRanking().') }
+                else {
+                    this.commands[command] = Object.assign(this.commands[command], { rank: 0 });
+                    return this.commands[command];
+                }
             },
 
             reset: () => {
@@ -73,44 +77,63 @@ class CommandPal {
 
         this.commands = {}; // Raw commands from command source
 
+        const defaults = {
+            case: false,
+            dev: false,
+            sort: false
+        };
+
         this.options = { // Developer-set options
             items: Object.assign({
-                case: false, // Default settings as fallback, also assigned to fill in settings gap
+                case: false,
                 dev: false,
                 sort: false
-            }, options), // Options object
+            }, options), // Default settings as fallback, also assigned to fill in settings gap
 
-            remove: function (item) { // Removes options key/value
-                delete this.items[item];
+            reset: function (...items) { // Removes options key/value
+                if (items.length === 0) { this._generateError('', 'No item specified when calling options.remove().') }
+                else {
+                    return items.map(item => {
+                        this.items[item] = defaults[item];
+                        return this.items[item];
+                    });
+                } // Return array of rest items with new change
             },
 
-            update: function (item) {
-                this.items = Object.assign(this.items, item);
+            update: function (items) {
+                if (!items) { this._generateError('', 'No item(s) specified when calling options.update().') }
+                else {
+                    this.items = Object.assign(this.items, items);
+                    return this.items;
+                }
             }
         }
 
         this._fetchCommands();
     }
 
-    updateCommand(...args) {
+    updateCommand(...args) { // Updates specified command
         args.forEach(arg => this.commands[Object.keys(arg)[0]] = Object.values(arg)[0]);
     }
 
-    removeCommand(...args) {
-        args.forEach(arg => {
-            if (this.commands[arg]) {
-                delete this.commands[arg];
-            } else {
-                Object.keys(this.commands).forEach(command => {
-                    if (this.commands[command].name == arg) {
-                        delete this.commands[command];
-                    }
-                })
-            }
-        })
+    removeCommand(...args) { // Removes specified commands
+        if (args.length === 0) { this._generateError('', `No specified command when calling method removeCommand().`) }
+        else {
+            args.forEach(arg => {
+                if (this.commands[arg]) {
+                    delete this.commands[arg];
+                } else {
+                    Object.keys(this.commands).forEach(command => {
+                        if (this.commands[command].name == arg) {
+                            delete this.commands[command];
+                        }
+                    })
+                }
+            });
+        }
     }
 
-    _fetchCommands() {
+    _fetchCommands() { // Assigns/Fetches list of commands
         if (typeof this.source == 'string' && this.source.endsWith('.json')) {
             fetch(this.source).then(res => { return res.json() }).then(data => { // Fetches commands from JSON file and inputs them into various variables
                 this.commands = Object.assign(this.commands, data);
@@ -120,7 +143,7 @@ class CommandPal {
         }
     }
 
-    updateCommandList(file) {
+    updateCommandList(file) { // Updates list of commands
         if (file == this.source) { return false }
         else {
             this.source = file;
@@ -129,17 +152,17 @@ class CommandPal {
     }
 
     listen(value) { // Listens for user input to return matching commands
-        this.matchedCommands.reset();
+        this.matchedCommands.reset(); // Resets matchedCommands
 
         if (this.options.items.case === false) { value = value.toLowerCase() }
         Object.keys(this.commands).forEach(command => {
             if (this.commands[command].aliases) {
-                this.commands[command].aliases.forEach((alias, index) => {
+                this.commands[command].aliases.forEach((alias, index) => { // Matching based on various options
                     if (this.options.items.case === false) {
                         if (this.options.items.exact === true) {
                             if (this.commands[command].aliases[index].toLowerCase().startsWith(value)) {
                                 this.matchedCommands.commands.push(this.commands[command].aliases[index]);
-                            }                            
+                            }
                         } else {
                             if (this.commands[command].aliases[index].toLowerCase().includes(value)) {
                                 this.matchedCommands.commands.push(this.commands[command].aliases[index]);
@@ -149,7 +172,7 @@ class CommandPal {
                         if (this.options.items.exact === true) {
                             if (this.commands[command].aliases[index].startsWith(value)) {
                                 this.matchedCommands.commands.push(this.commands[command].aliases[index]);
-                            }                            
+                            }
                         } else {
                             if (this.commands[command].aliases[index].includes(value)) {
                                 this.matchedCommands.commands.push(this.commands[command].aliases[index]);
@@ -188,16 +211,16 @@ class CommandPal {
         let callback;
         Object.values(this.commands).forEach(item => {
             if (item.name == command) {
-                if (this.options.items.ranking) {
+                if (this.options.items.ranking) { // Updates command's rank
                     if (!item.rank) { item.rank = 1 }
                     else if (item.rank >= 1) { item.rank += 1 };
                 }
                 callback = item.callback;
             } else if (item.aliases) {
-                item.aliases.forEach(alias => {
+                item.aliases.forEach(alias => { // Checks aliases to see if they match command
                     if (alias == command) {
                         callback = item.callback;
-                        if (this.options.items.ranking) {
+                        if (this.options.items.ranking) { // Updates command's rank
                             if (!item.rank) { item.rank = 1 }
                             else if (item.rank >= 1) { item.rank += 1 };
                         }
@@ -210,6 +233,6 @@ class CommandPal {
     };
 
     _generateError(error, msg) { // Developer mode erorr reporting
-        console.error(`CommandPal failure${this.options.items.dev ? `: ${msg}` : '.'}  Error: ${error}.`);
+        console.error(`CommandPal error${this.options.items.dev ? `: ${msg}` : '.'}${error ? `  Error: ${error}` : ''}`);
     };
 }
