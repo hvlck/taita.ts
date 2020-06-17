@@ -1,6 +1,6 @@
 class CommandPal {
-    constructor(file, options) {
-        this.source = file; // JSON file with commands
+    constructor(source, options) {
+        this.source = source; // JSON file with commands
 
         this.matchedCommands = {
             _oldCommands: this.commands,
@@ -14,6 +14,7 @@ class CommandPal {
             reset: function () {
                 this._oldCommands = this.commands;
                 this.commands = [];
+                return this.commands;
             },
 
             sort: type => {
@@ -80,6 +81,8 @@ class CommandPal {
         const defaults = {
             case: false,
             dev: false,
+            exact: false,
+            ranking: false,
             sort: false
         };
 
@@ -87,6 +90,8 @@ class CommandPal {
             items: Object.assign({
                 case: false,
                 dev: false,
+                exact: false,
+                ranking: false,
                 sort: false
             }, options), // Default settings as fallback, also assigned to fill in settings gap
 
@@ -113,6 +118,7 @@ class CommandPal {
     }
 
     updateCommand(...args) { // Updates specified command
+        if (args.length === 0) { this._generateError('', 'No specified command when calling method updateCommand().') }
         args.forEach(arg => this.commands[Object.keys(arg)[0]] = Object.values(arg)[0]);
     }
 
@@ -143,10 +149,10 @@ class CommandPal {
         }
     }
 
-    updateCommandList(file) { // Updates list of commands
-        if (file == this.source) { return false }
+    updateCommandList(source) { // Updates list of commands
+        if (source == this.source) { return false }
         else {
-            this.source = file;
+            this.source = source;
             this._fetchCommands();
         }
     }
@@ -205,6 +211,8 @@ class CommandPal {
         });
 
         if (this.options.items.sort) { this.matchedCommands.sort(this.options.items.sort) };
+
+        return this.matchedCommands.commands;
     };
 
     execute(command, obj) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
