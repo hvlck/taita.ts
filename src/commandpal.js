@@ -128,21 +128,8 @@ class CommandPal {
         if (args.length === 0) { this._generateError('', `No specified command when calling method removeCommand().`) }
         else {
             args.forEach(arg => {
-                if (this.commands[arg]) {
-                    delete this.commands[arg];
-                } else {
-                    Object.keys(this.commands).forEach(command => {
-                        if (this.commands[command].name == arg) {
-                            delete this.commands[command];
-                        } else if (this.commands[command].aliases) {
-                            this.commands[command].aliases.forEach(alias => {
-                                if (alias == arg) {
-                                    delete this.commands[command];
-                                }
-                            });
-                        };
-                    });
-                }
+                delete this.commands[this._commandContains(arg)];
+                return this.commands[this._commandContains(arg)];
             });
         }
     }
@@ -163,6 +150,32 @@ class CommandPal {
             this.source = source;
             this._fetchCommands();
         }
+    }
+
+    _commandContains(item) {
+        if (!item) {
+            this._generateError('', 'No item specified when calling CommandPal._commandContains()');
+            return;
+        }
+        let key = false;
+        if (this.commands[item]) {
+            key = item;
+        } else {
+            Object.keys(this.commands).forEach(command => {
+                if (this.commands[command].name == item) {
+                    key = command;
+                } else if (this.commands[command].callback == item) {
+                    key = command;
+                } else if (this.commands[command].aliases) {
+                    this.commands[command].aliases.forEach(alias => {
+                        if (alias == item) {
+                            key = command;
+                        }
+                    });
+                } else { return false }
+            });
+        };
+        return key;
     }
 
     listen(value) { // Listens for user input to return matching commands
@@ -201,9 +214,10 @@ class CommandPal {
                     if (this.commands[command].name.toLowerCase().startsWith(value)) {
                         this.matchedCommands.commands.push(this.commands[command].name);
                     }
-                }
-                if (this.commands[command].name.toLowerCase().includes(value)) {
-                    this.matchedCommands.commands.push(this.commands[command].name);
+                } else {
+                    if (this.commands[command].name.toLowerCase().includes(value)) {
+                        this.matchedCommands.commands.push(this.commands[command].name);
+                    }
                 }
             } else {
                 if (this.options.items.exact === true) {
@@ -224,26 +238,16 @@ class CommandPal {
     };
 
     execute(command, obj) { // Executes given command from one of its values (e.g. description, name, function name, etc.)
-        let callback;
-        Object.values(this.commands).forEach(item => {
-            if (item.name == command) {
-                if (this.options.items.ranking) { // Updates command's rank
-                    if (!item.rank) { item.rank = 1 }
-                    else if (item.rank >= 1) { item.rank += 1 };
-                }
-                callback = item.callback;
-            } else if (item.aliases) {
-                item.aliases.forEach(alias => { // Checks aliases to see if they match command
-                    if (alias == command) {
-                        callback = item.callback;
-                        if (this.options.items.ranking) { // Updates command's rank
-                            if (!item.rank) { item.rank = 1 }
-                            else if (item.rank >= 1) { item.rank += 1 };
-                        }
-                    }
-                });
-            }
-        });
+        let commandItems = this.commands[this._commandContains(command)];
+        if (!commandItems || !commandItems.callback) {
+            this._generateError('', `Failed to execute command ${command}.  No callback or command was found.`);
+            return false;
+        }
+        let callback = commandItems.callback;
+        if (this.options.items.ranking) { // Updates command's rank
+            if (!commandItems.rank) { commandItems.rank = 1 }
+            else if (commandItems.rank >= 1) { commandItems.rank += 1 };
+        }
         if (!obj) { obj = window }
         obj[callback](command);
     };

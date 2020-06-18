@@ -128,7 +128,7 @@ function add() {
 }
 
 function remove() {
-    commandpal.removeCommand('remove');
+    commandpal.removeCommands('remove');
 }
 
 function addCase() {
@@ -148,7 +148,7 @@ function removeCase() {
     commandpal.options.update({
         case: false
     });
-    commandpal.removeCommand('removeCase');
+    commandpal.removeCommands('removeCase');
 }
 
 function toggleSort() {
