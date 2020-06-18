@@ -116,14 +116,15 @@ function dark() {
 };
 
 function add() {
-    commandpal.updateCommand(
-        {
-            'remove': {
-                'name': 'Remove this command',
-                'callback': 'remove'
-            }
+    commandpal.updateCommand({
+        remove: {
+            name: "Remove this command",
+            callback: "remove",
+            aliases: [
+                "Second alias to remove this command"
+            ]
         }
-    );
+    });
 }
 
 function remove() {
@@ -136,11 +137,11 @@ function addCase() {
     });
 
     commandpal.updateCommand({
-        'removeCase': {
-            'name': 'Remove case sensitivty',
-            'callback': 'removeCase'
+        removeCase: {
+            name: "Remove case sensitivty",
+            callback: "removeCase"
         }
-    })
+    });
 };
 
 function removeCase() {
@@ -151,7 +152,7 @@ function removeCase() {
 }
 
 function toggleSort() {
-     if (commandpal.options.items.sort == 'alphabetical') {
+    if (commandpal.options.items.sort == 'alphabetical') {
         commandpal.options.update({
             sort: 'reverse-alphabetical'
         });

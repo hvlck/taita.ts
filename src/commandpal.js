@@ -58,16 +58,18 @@ class CommandPal {
         };
 
         this.rankings = {
-            getRanking: command => {
-                if (!command) { this._generateError('', 'No command specified when calling rankings.getRanking().') }
-                else { return this.commands[command].rank || 0 }
+            getRankings: (...commands) => {
+                if (commands.length == 0) { this._generateError('', 'No commands specified when calling rankings.getRanking().') }
+                else { return commands.map(command => { return this.commands[command].rank || 0 }) }
             },
 
-            resetRanking: command => {
-                if (!command) { this._generateError('', 'No command specified when calling rankings.resetRanking().') }
+            resetRankings: (...commands) => {
+                if (commands.length == 0) { this._generateError('', 'No command specified when calling rankings.resetRanking().') }
                 else {
-                    this.commands[command] = Object.assign(this.commands[command], { rank: 0 });
-                    return this.commands[command];
+                    return commands.map(command => {
+                        this.commands[command] = Object.assign(this.commands[command], { rank: 0 });
+                        return this.commands[command];
+                    });
                 }
             },
 
@@ -119,10 +121,10 @@ class CommandPal {
 
     updateCommand(...args) { // Updates specified command
         if (args.length === 0) { this._generateError('', 'No specified command when calling method updateCommand().') }
-        args.forEach(arg => this.commands[Object.keys(arg)[0]] = Object.values(arg)[0]);
+        args.forEach(arg => { this.commands[Object.keys(arg)[0]] = Object.assign(Object.values(arg)[0], this.commands[Object.keys(arg)[0]]) });
     }
 
-    removeCommand(...args) { // Removes specified commands
+    removeCommands(...args) { // Removes specified commands
         if (args.length === 0) { this._generateError('', `No specified command when calling method removeCommand().`) }
         else {
             args.forEach(arg => {
@@ -132,8 +134,14 @@ class CommandPal {
                     Object.keys(this.commands).forEach(command => {
                         if (this.commands[command].name == arg) {
                             delete this.commands[command];
-                        }
-                    })
+                        } else if (this.commands[command].aliases) {
+                            this.commands[command].aliases.forEach(alias => {
+                                if (alias == arg) {
+                                    delete this.commands[command];
+                                }
+                            });
+                        };
+                    });
                 }
             });
         }

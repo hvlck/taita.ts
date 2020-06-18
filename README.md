@@ -56,8 +56,8 @@ Meta
 + ~~**Docs**~~ [always a work-in-progress]
   + ~~Code commenting~~ [always a work-in-progress]
 + ~~Support for JS objects as commands~~
-+ Match names, aliases, and callbacks when calling removeCommand()
-+ Making rankings methods accept rest parameters
++ ~~Match names, aliases, and callbacks when calling removeCommand()~~
++ ~~Making rankings methods accept rest parameters~~
 + Make rankings methods search names, callbacks, and aliases
 
 ## Usage
@@ -151,12 +151,12 @@ Matches commands to specified input `value`.  Returns an `array` of matched comm
 let commands = instance.listen(document.querySelector('input[type="text"]').value);
 ```
 
-#### removeCommand(...*commands*)
+#### removeCommands(...*commands*)
 
 Accepts `strings` with the name of a command (note: this refers to the parent's name, not the `name` field).
 
 ```javascript
-instance.removeCommand("commandname");
+instance.removeCommands("commandname");
 ```
 
 #### updateCommand(...*commands*)
@@ -287,12 +287,14 @@ instance.rankings
 
 ##### Methods
 
-###### getRanking(*command*)
+###### getRankings(...*command*)
 
-Returns a `number` with the rank of the specified command.  Defaults to `0`.
+Accepts `strings` containing the name of a command object.
+
+Returns an `array` filled with `numbers` that equate to the rank of the specified command.  Defaults to `0`.
 
 ```javascript
-instance.rankings.getRanking('commandname');
+instance.rankings.getRankings('commandname');
 ```
 
 ##### reset()
@@ -303,12 +305,23 @@ Resets the ranks of all commands to `0`.
 instance.rankings.reset();
 ```
 
-##### resetRanking(*command*)
+##### resetRankings(...*command*)
 
-Resets the rank of the specified command.  Returns the specified command's values (`name`, `aliases`, `callback`, and `rank`).
+Accepts `strings` containing the name of a command object.
+
+Resets the rank of the specified commands.  Returns an `array` filled with the new values of each command (`name`, `aliases`, `callback`, and `rank`).
 
 ```javascript
-instance.rankings.resetRanking('commandname');
+instance.rankings.resetRankings('commandname');
+/*
+[
+  {
+    name: "commandName",
+    rank: 0,
+    callback: "commandName"
+  }
+]
+*/
 ```
 
 #### *source*
