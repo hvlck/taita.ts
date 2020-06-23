@@ -1,0 +1,22 @@
+{
+	"name": "command-palette",
+	"version": "1.3.0",
+	"description": "command palette library",
+	"main": "dist/commandpalette.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/EthanJustice/command-palette.git"
+	},
+	"keywords": [
+		"command-palette"
+	],
+	"author": "Ethan Justice",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/EthanJustice/command-palette/issues"
+	},
+	"homepage": "https://github.com/EthanJustice/command-palette#readme",
+	"files": [
+		"dist/commandpalette.js"
+	]
+}

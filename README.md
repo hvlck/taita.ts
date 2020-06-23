@@ -1,8 +1,8 @@
-# commandpal
+# command-palette
 
-Command palette library
+command palette library
 
-[Demo](https://ethanjustice.github.io/commandpal/)
+[Demo](https://ethanjustice.github.io/command-palette/)
 
 ## Table of Contents
 
@@ -15,10 +15,11 @@ Command palette library
 [](#fs)
 
 ```markdown
-Commandpal
+command-palette
 /src/
-    /commandpal.js - core file
-    /commandpal.prod.js - production version of the core file
+    /commandpalette.js - core file
+/dist/
+    /commandpalette.js - production version of the core file
 
 Demo
 /index.html - demo page
@@ -53,7 +54,7 @@ Meta
 [](#setup)
 
 ```javascript
-let commandpal = new CommandPal({
+let commandpal = new CommandPalette({
     "commandname": {
       name: "This is an example command",
       callback: "callback",

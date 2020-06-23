@@ -1,10 +1,22 @@
 {
+    "add": {
+        "name": "Add extra commands",
+        "callback": "add"
+    },
+    "case": {
+        "name": "Turn on case sensitivity",
+        "callback": "addCase"
+    },
     "dark": {
         "name": "Dark mode",
         "callback": "dark",
         "aliases": [
             "2nd alias to change to dark mode"
         ]
+    },
+    "getRank": {
+        "name": "Get ranking of command 'Toggle sorting'",
+        "callback": "getRank"
     },
     "light": {
         "name": "Light mode",
@@ -13,14 +25,6 @@
             "Second alias to change to light mode",
             "3rd alias to change to light mode"
         ]
-    },
-    "add": {
-        "name": "Add extra commands",
-        "callback": "add"
-    },
-    "case": {
-        "name": "Turn on case sensitivity",
-        "callback": "addCase"
     },
     "toggleSort": {
         "name": "Toggle sorting",
