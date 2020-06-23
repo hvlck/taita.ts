@@ -67,8 +67,8 @@ class CommandPal {
 				if (commands.length == 0) { this._generateError('', 'No command specified when calling rankings.resetRanking().') }
 				else {
 					return commands.map(command => {
-						this.commands[command] = Object.assign(this.commands[command], { rank: 0 });
-						return this.commands[command];
+						this.commands[this._commandContains(command)].rank = 0;
+						return this.commands[this._commandContains(command)];
 					});
 				}
 			},

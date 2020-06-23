@@ -34,10 +34,7 @@ Meta
 
 [](#roadmap)
 
-### Roadmap/Options
-
-+ ~~Dev mode~~ [always a work-in-progress]
-  + ~~Helpful errors~~
++ ~~Helpful errors~~
 
 ### Roadmap/Other
 
@@ -46,7 +43,6 @@ Meta
   + ... [will only be added once I've thought of a reason for an option]
 + ~~**Docs**~~ [always a work-in-progress]
   + ~~Code commenting~~ [always a work-in-progress]
-+ Make rankings methods search names, callbacks, and aliases (~~getRankings~~)
 
 ## Usage
 
@@ -277,7 +273,7 @@ instance.rankings
 
 ###### getRankings(...*command*)
 
-Accepts `strings` containing any value of a command object (aliases, name, callback, command name).
+Accepts `strings` containing any value of a command object (an alias, name, callback, command name).
 
 Returns an `array` filled with `numbers` that equate to the rank of the specified command.  Defaults to `0`.
 
@@ -295,7 +291,7 @@ instance.rankings.reset();
 
 ##### resetRankings(...*command*)
 
-Accepts `strings` containing the name of a command object.
+Accepts `strings` containing the any value of a command object (name, an alias, callbakc, command name).
 
 Resets the rank of the specified commands.  Returns an `array` filled with the new values of each command (`name`, `aliases`, `callback`, and `rank`).
 
