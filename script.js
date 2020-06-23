@@ -10,7 +10,7 @@ const buildElement = (type, text, attributes) => {
     return element;
 }
 
-let commandpal = new CommandPalette('/commands.json', {
+let commandpal = new Taita('/commands.json', {
     sort: 'alphabetical',
     ranking: true
 });
@@ -107,6 +107,14 @@ function updateCommands() {
 
 // Command Palette functions
 
+function light() {
+    document.querySelector('link').href = 'https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/light-variable.css';
+};
+
+function dark() {
+    document.querySelector('link').href = 'https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/dark-variable.css';
+};
+
 function add() {
     commandpal.updateCommand({
         remove: {
@@ -117,6 +125,10 @@ function add() {
             ]
         }
     });
+}
+
+function remove() {
+    commandpal.removeCommands('remove');
 }
 
 function addCase() {
@@ -131,27 +143,6 @@ function addCase() {
         }
     });
 };
-
-function dark() {
-    document.querySelector('link').href = 'https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/dark-variable.css';
-};
-
-function getRank() {
-    alert(`Ranking of command 'Toggle sorting': ${commandpal.rankings.getRankings('Toggle sorting')}.  If it's 0, try using the command a few times.`)
-}
-
-function light() {
-    document.querySelector('link').href = 'https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/light-variable.css';
-};
-
-function refreshCommands() {
-    commandpal.updateCommandList('./commands.json');
-    updateCommands();
-}
-
-function remove() {
-    commandpal.removeCommands('remove');
-}
 
 function removeCase() {
     commandpal.options.update({
@@ -179,5 +170,10 @@ function toggleSort() {
         });
     };
 
+    updateCommands();
+}
+
+function refreshCommands() {
+    commandpal.updateCommandList('./commands.json');
     updateCommands();
 }

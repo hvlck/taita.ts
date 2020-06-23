@@ -1,4 +1,4 @@
-class CommandPalette {
+class Taita {
 	constructor(source, options) {
 		this.source = source; // JSON file with commands
 
@@ -145,7 +145,7 @@ class CommandPalette {
 	}
 
 	updateCommandList(source) { // Updates list of commands
-		if (!source) { this._generateError('', 'No source provided when calling CommandPalette.updateCommandList()') }
+		if (!source) { this._generateError('', 'No source provided when calling Taita.updateCommandList()') }
 		else {
 			this.source = source;
 			this._fetchCommands();
@@ -154,7 +154,7 @@ class CommandPalette {
 
 	_commandContains(item) {
 		if (!item) {
-			this._generateError('', 'No item specified when calling CommandPalette._commandContains()');
+			this._generateError('', 'No item specified when calling Taita._commandContains()');
 			return;
 		}
 		let key = false;
@@ -253,6 +253,6 @@ class CommandPalette {
 	};
 
 	_generateError(error, msg) { // Developer mode erorr reporting
-		console.error(`CommandPalette error${this.options.items.dev ? `: ${msg}` : '.'}${error ? `  Error: ${error}` : ''}`);
+		console.error(`Taita error${this.options.items.dev ? `: ${msg}` : '.'}${error ? `  Error: ${error}` : ''}`);
 	};
 }

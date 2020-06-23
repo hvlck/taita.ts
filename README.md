@@ -1,8 +1,8 @@
-# command-palette
+# taita
 
-command palette library
+Command palette library
 
-[Demo](https://ethanjustice.github.io/command-palette/)
+[Demo](https://ethanjustice.github.io/taita/)
 
 ## Table of Contents
 
@@ -15,11 +15,11 @@ command palette library
 [](#fs)
 
 ```markdown
-command-palette
+Taita
 /src/
-    /commandpalette.js - core file
+    /taita.js - core file
 /dist/
-    /commandpalette.js - production version of the core file
+    /taita.js - production version of the core file
 
 Demo
 /index.html - demo page
@@ -54,7 +54,7 @@ Meta
 [](#setup)
 
 ```javascript
-let commandpal = new CommandPalette({
+let commandpal = new Taita({
     "commandname": {
       name: "This is an example command",
       callback: "callback",
