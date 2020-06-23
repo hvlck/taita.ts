@@ -36,29 +36,17 @@ Meta
 
 ### Roadmap/Options
 
-+ ~~Case sensitivity~~
-+ ~~Exact and Partial matching~~
-+ ~~Sort commands~~
 + ~~Dev mode~~ [always a work-in-progress]
   + ~~Helpful errors~~
-
-### Roadmap/Methods
-
-+ ~~Sort commands~~
-+ ~~Execute command~~
 
 ### Roadmap/Other
 
 + Hidden alias matching (if command string matches alias, show the normal command - used for typos, etc.)
-+ ~~Reverse-history sorting~~
-+ ~~Reverse-alphabetical sorting~~
 + Command options (for each individual command)
+  + ... [will only be added once I've thought of a reason for an option]
 + ~~**Docs**~~ [always a work-in-progress]
   + ~~Code commenting~~ [always a work-in-progress]
-+ ~~Support for JS objects as commands~~
-+ ~~Match names, aliases, and callbacks when calling removeCommand()~~
-+ ~~Making rankings methods accept rest parameters~~
-+ Make rankings methods search names, callbacks, and aliases
++ Make rankings methods search names, callbacks, and aliases (~~getRankings~~)
 
 ## Usage
 
@@ -289,7 +277,7 @@ instance.rankings
 
 ###### getRankings(...*command*)
 
-Accepts `strings` containing the name of a command object.
+Accepts `strings` containing any value of a command object (aliases, name, callback, command name).
 
 Returns an `array` filled with `numbers` that equate to the rank of the specified command.  Defaults to `0`.
 
