@@ -1,6 +1,6 @@
 # taita
 
-Command palette library
+command palette library
 
 [Demo](https://ethanjustice.github.io/taita/)
 

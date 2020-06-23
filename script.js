@@ -10,7 +10,7 @@ const buildElement = (type, text, attributes) => {
     return element;
 }
 
-let commandpal = new Taita('/commands.json', {
+let commandpal = new Taita('./commands.json', {
     sort: 'alphabetical',
     ranking: true
 });
