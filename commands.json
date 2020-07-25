@@ -2,9 +2,7 @@
     "dark": {
         "name": "Dark mode",
         "callback": "dark",
-        "aliases": [
-            "2nd alias to change to dark mode"
-        ]
+        "aliases": ["2nd alias to change to dark mode"]
     },
     "light": {
         "name": "Light mode",

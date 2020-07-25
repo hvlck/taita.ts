@@ -1,22 +1,22 @@
 {
-	"name": "taita",
-	"version": "1.3.0",
-	"description": "command palette library",
-	"main": "dist/taita.js",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/EthanJustice/taita.git"
-	},
-	"keywords": [
-		"command-palette"
-	],
-	"author": "Ethan Justice",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/EthanJustice/taita/issues"
-	},
-	"homepage": "https://github.com/EthanJustice/taita#readme",
-	"files": [
-		"dist/taita.js"
-	]
+    "name": "taita",
+    "version": "1.3.0",
+    "description": "command palette library",
+    "main": "dist/taita.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EthanJustice/taita.git"
+    },
+    "keywords": [
+        "command-palette"
+    ],
+    "author": "Ethan Justice",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/EthanJustice/taita/issues"
+    },
+    "homepage": "https://github.com/EthanJustice/taita#readme",
+    "files": [
+        "dist/taita.js"
+    ]
 }
