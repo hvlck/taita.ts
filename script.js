@@ -125,12 +125,12 @@ function updateCommands() {
 
 function light() {
     document.querySelector("link").href =
-        "https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/light-variable.css";
+        "https://cdn.jsdelivr.net/npm/gyr-css@latest/dist/light-variable.css";
 }
 
 function dark() {
     document.querySelector("link").href =
-        "https://cdn.jsdelivr.net/npm/gyr-css@1.6.3/dist/dark-variable.css";
+        "https://cdn.jsdelivr.net/npm/gyr-css@latest/dist/dark-variable.css";
 }
 
 function add() {
