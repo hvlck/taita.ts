@@ -1,39 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Command Pal</title>
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="https://cdn.jsdelivr.net/npm/gyr-css@latest/dist/dark-variable.css"
-        />
         <style>
+            body.dark {
+                --primary: #212121;
+                --secondary: #b9bec5;
+                --tertiary: #404040;
+            }
+
             body {
+                --highlight: #16c581;
+
+                --primary: #fafafa;
+                --secondary: #212121;
+                --tertiary: #e1e1e1;
+            }
+
+            body {
+                background: var(--primary);
+                color: var(--secondary);
                 max-width: 800px;
                 margin: 0 auto;
                 padding: 10px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            nav a {
+                margin: auto 2% auto 0
+            }
+
+            a,
+            a:visited {
+                color: var(--highlight);
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
             }
 
             input {
-                width: 100%;
-                margin: 0 auto;
+                width: 95%;
+                margin: 0;
                 font-size: 16pt;
-                padding: 0.5rem;
+                padding: 0.5rem 10px;
+                background: var(--tertiary);
+                color: var(--secondary);
+                border: none;
+                outline: none;
             }
 
             .commands {
                 background-color: var(--tertiary);
+                width: 95%;
             }
 
-            .commands > * {
-                padding: 3px;
+            .commands>* {
+                width: 100%;
+                padding: 3px 10px;
                 font-size: 14pt;
                 background-color: var(--tertiary);
                 color: var(--secondary);
-                margin: 0 auto;
-                padding: 0.25rem;
+                margin: 0;
                 cursor: pointer;
             }
 
@@ -50,16 +82,23 @@
                 0% {
                     opacity: 0;
                 }
+
                 100% {
                     opacity: 1;
                 }
             }
         </style>
     </head>
+
     <body>
         <h1>Taita</h1>
+        <nav>
+            <a href="https://github.com/EthanJustice/taita/">Repository</a>
+            <a href="https://github.com/EthanJustice/taita/#usage">Docs</a>
+        </nav>
         <p>Command palette library</p>
         <script src="./src/taita.js"></script>
         <script src="./script.js"></script>
     </body>
+
 </html>

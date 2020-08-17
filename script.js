@@ -36,6 +36,10 @@ inp.addEventListener("focus", () => {
     updateCommands();
 });
 
+inp.addEventListener('blur', () => {
+    Object.values(commands.children).forEach(item => item.remove());
+});
+
 inp.addEventListener("input", () => {
     updateCommands();
 });
@@ -121,16 +125,19 @@ function updateCommands() {
     }
 }
 
+(function () {
+    let m = window.matchMedia('(prefers-color-scheme:dark)');
+    if (m.matches == true) document.body.classList.add('dark');
+}());
+
 // Command Palette functions
 
 function light() {
-    document.querySelector("link").href =
-        "https://cdn.jsdelivr.net/npm/gyr-css@latest/dist/light-variable.css";
+    document.body.classList.remove('dark');
 }
 
 function dark() {
-    document.querySelector("link").href =
-        "https://cdn.jsdelivr.net/npm/gyr-css@latest/dist/dark-variable.css";
+    document.body.classList.add('dark')
 }
 
 function add() {
