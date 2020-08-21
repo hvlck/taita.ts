@@ -6,13 +6,11 @@ command palette library
 
 ## Table of Contents
 
-+ [File Structure](#fas)
++ [File Structure](#file-structure)
 + [Roadmap](#roadmap)
 + [Usage](#usage)
 
 ## File Structure
-
-[](#fs)
 
 ```markdown
 Taita
@@ -33,10 +31,6 @@ Meta
 
 ## Roadmap
 
-[](#roadmap)
-
-+ ~~Helpful errors~~
-
 ### Roadmap/Other
 
 + Hidden alias matching (if command string matches alias, show the normal command - used for typos, etc.)
@@ -46,8 +40,6 @@ Meta
   + ~~Code commenting~~ [always a work-in-progress]
 
 ## Usage
-
-[](#usage)
 
 ### Setup
 

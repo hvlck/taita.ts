@@ -7,10 +7,7 @@
     "light": {
         "name": "Light mode",
         "callback": "light",
-        "aliases": [
-            "Second alias to change to light mode",
-            "3rd alias to change to light mode"
-        ]
+        "aliases": ["Second alias to change to light mode", "3rd alias to change to light mode"]
     },
     "add": {
         "name": "Add extra commands",
