@@ -3,6 +3,7 @@
 command palette library
 
 [Demo](https://ethanjustice.github.io/taita/)
+ | [NPM](https://www.npmjs.com/package/taita)
 
 ## Table of Contents
 
@@ -16,8 +17,10 @@ command palette library
 Taita
 /src/
     /taita.js - core file
+    /index.js - source version for use with NPM
 /dist/
     /taita.js - production version of the core file
+    /index.js - production version for use with NPM
 
 Demo
 /index.html - demo page
@@ -41,9 +44,28 @@ Meta
 
 ## Usage
 
-### Setup
+In your `package.json`:
 
-[](#setup)
+```json
+"dependencies": {
+  "taita": "~1.3.0"
+  ...
+}
+```
+
+Make sure to update the version, then run `npm install taita`.
+
+And finally, import it:
+
+```javascript
+const { Taita } = require("taita");
+
+let commandPalette = new Taita({
+  // ...
+});
+```
+
+### Setup
 
 ```javascript
 let commandpal = new Taita({
