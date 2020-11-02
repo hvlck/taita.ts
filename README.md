@@ -34,13 +34,7 @@ Meta
 
 ## Roadmap
 
-### Roadmap/Other
-
-+ Hidden alias matching (if command string matches alias, show the normal command - used for typos, etc.)
-+ Command options (for each individual command)
-  + ... [will only be added once I've thought of a reason for an option]
-+ ~~**Docs**~~ [always a work-in-progress]
-  + ~~Code commenting~~ [always a work-in-progress]
++ Remove console error logging, use `return` statements instead
 
 ## Usage
 

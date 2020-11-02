@@ -3,6 +3,9 @@
     "version": "1.3.1",
     "description": "command palette library",
     "main": "dist/index.js",
+    "scripts": {
+        "doc": "npx jsdoc src/taita.js -d ./doc/ -c jsdoc.json"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/EthanJustice/taita.git"
@@ -14,6 +17,9 @@
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/EthanJustice/taita/issues"
+    },
+    "devDependencies": {
+        "jsdoc": "~3.6.6"
     },
     "homepage": "https://github.com/EthanJustice/taita#readme",
     "files": [
