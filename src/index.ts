@@ -1,31 +1,69 @@
-interface TaitaOptions {
+/**
+ * Taita options configuration
+ * @param case Case sensitivity - if set to `true`, command matching will respect case; if set to `false`, matching will not care about case
+ * @param exact Exact matching - `true` matches commands exactly, while `false` uses the String.prototype.includes() method to match
+ * @param ranking If set to `true`, commands will be ranked according to the amount of time they're used
+ * @param sort The type of sort to use on matched commands
+ */
+export interface TaitaOptions {
     case: boolean;
     exact: boolean;
     ranking: boolean;
     sort: SortType;
 }
 
-interface Rankings {
+/**
+ * Ranking interface
+ */
+export interface Rankings {
+    /**
+     * get a command's rank
+     * @param commands
+     */
     get(...commands: string[]): boolean | number[];
+    /**
+     * Resets the ranks of all commands to 0
+     */
     clear(): void;
+    /**
+     * resets the rank of specified commands to 0
+     * @param commands an array of strings of the commands you wish to reset the rank of - these strings will match a command's aliases or name
+     */
     reset(...commands: string[]): boolean;
 }
 
-interface Command {
+/**
+ * Represents a single command
+ * @param name the name of the command (this should be displayed in your UI)
+ * @param callback the function to call when the command is invoked
+ * @param rank the initial rank of the command. Note that this can be ommitted, and will default to 0.
+ * @param aliases any aliases of the command (these serve the same function as the name property)
+ */
+export interface Command {
     name: string;
-    callback: string | Function;
+    callback: Function;
     rank: number;
     aliases?: string[];
 }
 
-enum SortType {
+/**
+ * Method to sort commands by
+ * @param Alphabetical sort commands alphabetically
+ * @param RevAlphabetical sort commands reverse-alphabetically
+ * @param Rank sort commands by their internal rank
+ * @param RevRank sort commands by lowest rank
+ */
+export enum SortType {
     Alphabetical = 'alphabetical',
     RevAlphabetical = 'reverse-alphabetical',
     Rank = 'rank',
     RevRank = 'reverse-rank',
 }
 
-interface TaitaInstance {
+/**
+ *
+ */
+export interface TaitaInstance {
     commands: Command[];
     matched: {
         old: string[];
@@ -41,8 +79,21 @@ interface TaitaInstance {
     remove(): boolean;
 }
 
+/**
+ * The main method of using Taita
+ */
 export default class Taita implements TaitaInstance {
+    /**
+     * @param commands The list of all Command objects registered as commands by the Taita instance
+     */
     commands: Command[];
+    /**
+     * @param matched.old list of old matched commands (note that the items in the array correspond to Command.name properties)
+     * @param matched.commands list of currently matched commands, as calculated by the last call on Instance.listen()
+     * @param matched.changed determines whether or not the matched commands have changed since the last time Instance.listen() was called
+     * @param matched.reset reset all matched commands
+     * @param matched.sort sort all matched commands by a SortType
+     */
     matched: {
         old: string[];
         commands: string[];
@@ -51,9 +102,33 @@ export default class Taita implements TaitaInstance {
         sort: Function;
         ranks: Command[];
     };
+    /**
+     * @param rankings utilities for working with command rankings
+     */
     rankings: Rankings;
+    /**
+     * @param options the configuration options for the Taita instanec
+     */
     options: TaitaOptions;
 
+    /**
+     * Creates a new Taita instance.
+     * @param source The list of commands to use. For instance:
+     * ```javascript
+     * [
+     *  {
+     *     name: "This is an example command",
+     *     callback: function() {
+     *        console.log('console.log')
+     *     },
+     *     rank: 5,
+     *     aliases: ['This is an alias for an example command']
+     *  }
+     * ]
+     * ```
+     * The object in the array is a co
+     * @param options - taita configuration options. These can be overwritten by setting the instance.options property directly
+     */
     constructor(source: Command[], options?: TaitaOptions) {
         this.commands = source;
         if (options) {
@@ -178,13 +253,16 @@ export default class Taita implements TaitaInstance {
             },
 
             clear: () => {
-                this.commands = [];
+                this.commands.forEach((i) => (i.rank = 0));
             },
         };
     }
 
+    /**
+     * Updates the given commands
+     * @param args An array of Command objects to update
+     */
     update(...args: Command[]) {
-        // Updates specified command
         if (args.length == 0) {
             return false;
         } else {
@@ -199,8 +277,11 @@ export default class Taita implements TaitaInstance {
         }
     }
 
+    /**
+     * Removes specified commands.
+     * @param args The commands to remove. Note that the parameter is a string array since the strings will be matched against every command's aliases and names.
+     */
     remove(...args: string[]) {
-        // Removes specified commands
         if (args.length == 0) {
             return false;
         } else {
@@ -216,6 +297,10 @@ export default class Taita implements TaitaInstance {
         }
     }
 
+    /**
+     * Replaces **every** registered command. If you only want to replace a select few commands, use the instance.update() method
+     * @param source The updated list of commands to use
+     */
     replace(source: Command[]) {
         if (!source) {
             return false;
@@ -226,8 +311,9 @@ export default class Taita implements TaitaInstance {
     }
 
     /**
-     * Returns commands that match the value argument
-     * @param {string} value - the text of the command to try to match
+     * Returns commands that match the value argument. The return value is an array of all the Command.names of any matching commands.
+     * Sort settings are taken from the instance's options property, so make sure you set it before you call it if you want to sort commands differently.
+     * @param value - the text of the command to try to match (this can be part of an alias or the name of the command)
      */
     listen(value: string) {
         // Listens for user input to return matching commands
@@ -297,10 +383,9 @@ export default class Taita implements TaitaInstance {
 
     /**
      * Execute the specified command
-     * @param {*} command - any identifier of a Command (alias, callback, or name) that is to be executed
-     * @param {*} [obj=window] - the object to execute the command against
+     * @param command - any identifier of a Command (alias, or name) that is to be executed
      */
-    execute(command: string, fn: Function) {
+    execute(command: string) {
         // Executes given command from one of its values (e.g. description, name, function name, etc.)
         const cmd = this.contains(command);
         if (typeof cmd != 'object') {
@@ -310,7 +395,6 @@ export default class Taita implements TaitaInstance {
         if (!cmd || !cmd.callback) {
             return false;
         }
-        let callback = cmd.callback;
         if (this.options.ranking) {
             // Updates command's rank
             if (!cmd.rank) {
@@ -320,16 +404,21 @@ export default class Taita implements TaitaInstance {
             }
         }
 
-        return fn.call(callback);
+        return cmd.callback.apply(cmd);
     }
 
+    /**
+     * Determines whether or not a specified string is contained within a command (if the name or any alias matches the given string).
+     * This is mostly used internally by Taita, but also provided for convenience.
+     * @param item The string to search
+     */
     contains(item: string): undefined | Command {
         if (!item) {
             return;
         }
 
         return this.commands.find((command) => {
-            if (command.name == item || command.callback == item) {
+            if (command.name == item) {
                 return command;
             } else if (command.aliases?.length != 0) {
                 if (command.aliases?.indexOf(item) != -1) {

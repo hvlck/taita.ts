@@ -3,12 +3,16 @@ import Taita from './build/index.js';
 const source = [
     {
         name: 'Dark mode',
-        callback: 'dark',
+        callback: function dark() {
+            document.body.classList.add('dark');
+        },
         aliases: ['2nd alias to change to dark mode'],
     },
     {
         name: 'Light mode',
-        callback: 'light',
+        callback: function light() {
+            document.body.classList.remove('dark');
+        },
         aliases: ['Second alias to change to light mode', '3rd alias to change to light mode'],
     },
     {
@@ -152,16 +156,6 @@ function updateCommands() {
     let m = window.matchMedia('(prefers-color-scheme:dark)');
     if (m.matches == true) document.body.classList.add('dark');
 })();
-
-// Command Palette functions
-
-function light() {
-    document.body.classList.remove('dark');
-}
-
-function dark() {
-    document.body.classList.add('dark');
-}
 
 function add() {
     commandpal.updateCommand({

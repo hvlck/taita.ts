@@ -1,0 +1,6 @@
+{
+    "out": "docs",
+    "theme": "minimal",
+    "name": "taita.ts",
+    "readme": "./README.md"
+}
