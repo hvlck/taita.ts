@@ -2,6 +2,8 @@
 
 command palette library
 
+**PLEASE NOTE**: I need to update the docs since the TypeScript rewrite is a breaking change (the TypeScript rewrite is not on NPM yet).
+
 [Demo](https://ethanjustice.github.io/taita/)
  | [NPM](https://www.npmjs.com/package/taita)
 

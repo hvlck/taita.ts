@@ -1,3 +1,34 @@
+import Taita from './build/index.js';
+
+const source = [
+    {
+        name: 'Dark mode',
+        callback: 'dark',
+        aliases: ['2nd alias to change to dark mode'],
+    },
+    {
+        name: 'Light mode',
+        callback: 'light',
+        aliases: ['Second alias to change to light mode', '3rd alias to change to light mode'],
+    },
+    {
+        name: 'Add extra commands',
+        callback: 'add',
+    },
+    {
+        name: 'Turn on case sensitivity',
+        callback: 'addCase',
+    },
+    {
+        name: 'Toggle sorting',
+        callback: 'toggleSort',
+    },
+    {
+        name: 'Refresh commands',
+        callback: 'refreshCommands',
+    },
+];
+
 const buildElement = (type, text, attributes) => {
     let element = document.createElement(type);
     element.innerText = text;
@@ -13,7 +44,7 @@ const buildElement = (type, text, attributes) => {
     return element;
 };
 
-let commandpal = new Taita('./commands.json', {
+let commandpal = new Taita(source, {
     sort: 'alphabetical',
     ranking: true,
 });
@@ -30,7 +61,7 @@ let commands;
 
 let commandIndex = 0;
 
-let changed = commandpal.matchedCommands.changed();
+let changed = commandpal.matched.changed();
 
 inp.addEventListener('focus', () => {
     updateCommands();
@@ -95,7 +126,7 @@ function updateCommands() {
         });
     }
 
-    commandpal.matchedCommands.commands.forEach((item) => {
+    commandpal.matched.commands.forEach((item) => {
         let newCommand = buildElement('p', item);
 
         newCommand.addEventListener('click', () => {

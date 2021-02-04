@@ -76,7 +76,7 @@ class Taita {
 
                     this.matchedCommands.commands = this.matchedCommands.ranks.map((item) => item.name);
                 } else {
-                    this._generateError('', 'Invalid sorting pattern.');
+                    throw new Error('Invalid sorting pattern');
                 }
             },
         };
@@ -84,7 +84,7 @@ class Taita {
         this.rankings = {
             getRankings: (...commands) => {
                 if (commands.length == 0) {
-                    this._generateError('', 'No commands specified when calling rankings.getRanking().');
+                    throw new Error('', 'No commands specified when calling rankings.getRanking().');
                 } else {
                     return commands.map((command) => {
                         return this.commands[this._commandContains(command)].rank || 0;
@@ -94,7 +94,7 @@ class Taita {
 
             resetRankings: (...commands) => {
                 if (commands.length == 0) {
-                    this._generateError('', 'No command specified when calling rankings.resetRanking().');
+                    throw new Error('', 'No command specified when calling rankings.resetRanking().');
                 } else {
                     return commands.map((command) => {
                         this.commands[this._commandContains(command)].rank = 0;
@@ -134,7 +134,7 @@ class Taita {
             reset: function (...items) {
                 // Removes options key/value
                 if (items.length === 0) {
-                    this._generateError('', 'No item specified when calling options.remove().');
+                    throw new Error('', 'No item specified when calling options.remove().');
                 } else {
                     return items.map((item) => {
                         this.items[item] = defaults[item];
@@ -145,7 +145,7 @@ class Taita {
 
             update: function (items) {
                 if (!items) {
-                    this._generateError('', 'No item(s) specified when calling options.update().');
+                    throw new Error('', 'No item(s) specified when calling options.update().');
                 } else {
                     this.items = Object.assign(this.items, items);
                     return this.items;
@@ -163,7 +163,7 @@ class Taita {
     updateCommand(...args) {
         // Updates specified command
         if (args.length === 0) {
-            this._generateError('', 'No specified command when calling method updateCommand().');
+            throw new Error('', 'No specified command when calling method updateCommand().');
         }
         args.forEach((arg) => {
             this.commands[Object.keys(arg)[0]] = Object.assign(
@@ -180,7 +180,7 @@ class Taita {
     removeCommands(...args) {
         // Removes specified commands
         if (args.length === 0) {
-            this._generateError('', `No specified command when calling method removeCommand().`);
+            throw new Error('', `No specified command when calling method removeCommand().`);
         } else {
             args.forEach((arg) => {
                 delete this.commands[this._commandContains(arg)];
@@ -201,12 +201,12 @@ class Taita {
                     this.commands = data;
                 })
                 .catch((err) => {
-                    this._generateError(err, `Failed to load commands from source ${this.source}.`);
+                    throw new Error(err, `Failed to load commands from source ${this.source}.`);
                 });
         } else if (typeof this.source == 'object') {
             this.commands = this.source;
         } else {
-            this._generateError('', 'Invalid source type provided.');
+            throw new Error('', 'Invalid source type provided.');
         }
     }
 
@@ -217,7 +217,7 @@ class Taita {
     updateCommandList(source) {
         // Updates list of commands
         if (!source) {
-            this._generateError('', 'No source provided when calling Taita.updateCommandList()');
+            throw new Error('', 'No source provided when calling Taita.updateCommandList()');
         } else {
             this.source = source;
             this._fetchCommands();
@@ -226,7 +226,7 @@ class Taita {
 
     _commandContains(item) {
         if (!item) {
-            this._generateError('', 'No item specified when calling Taita._commandContains()');
+            throw new Error('', 'No item specified when calling Taita._commandContains()');
             return;
         }
         let key = false;
@@ -330,8 +330,7 @@ class Taita {
         // Executes given command from one of its values (e.g. description, name, function name, etc.)
         let commandItems = this.commands[this._commandContains(command)];
         if (!commandItems || !commandItems.callback) {
-            this._generateError('', `Failed to execute command ${command}.  No callback or command was found.`);
-            return false;
+            throw new Error('', `Failed to execute command ${command}.  No callback or command was found.`);
         }
         let callback = commandItems.callback;
         if (this.options.items.ranking) {
@@ -346,10 +345,5 @@ class Taita {
             obj = window;
         }
         obj[callback](command);
-    }
-
-    _generateError(error, msg) {
-        // Developer mode erorr reporting
-        console.error(`Taita error${this.options.items.dev ? `: ${msg}` : '.'}${error ? `  Error: ${error}` : ''}`);
     }
 }
